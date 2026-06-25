@@ -2,55 +2,66 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8" />
-    <link rel="shortcut icon" href="./images/favicon.ico"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ZHANG.RUN</title>
+    <link rel="shortcut icon" href="./images/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>ZHANG</title>
     <style>
-        /* ---------- 全局重置 ---------- */
-        * {
+        *,
+        *::before,
+        *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html,
         body {
-            min-height: 100vh;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
             background: #1e1e1e;
+            font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            padding: 20px;
+            padding: 0;
+            margin: 0;
         }
 
-        /* ---------- 内容容器 ---------- */
         .content {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: 0.5rem;
             text-align: center;
+            max-width: 100vw;
+            max-height: 100vh;
+            padding: 16px;
         }
 
-        /* ---------- 姓名容器 ---------- */
         .name-wrapper {
             position: relative;
             display: inline-block;
         }
 
-        /* ---------- 姓名：Georgia Bold ---------- */
         .name {
-            font-family: 'Georgia', 'Times New Roman', serif;  /* Georgia 衬线字体 */
-            font-weight: 700;                                   /* Bold */
-            font-size: clamp(36px, 3vw, 70px);
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-weight: 700;
+            font-size: clamp(36px, 2.5vw, 80px);
             letter-spacing: 0.04em;
             line-height: 1.1;
             color: #ffffff;
             text-transform: uppercase;
             display: inline-block;
+            white-space: nowrap;
         }
 
-        /* ---------- 下划线 + 渐变 ---------- */
         .name-wrapper::after {
             content: '';
             position: absolute;
@@ -58,46 +69,127 @@
             left: 50%;
             transform: translateX(-50%);
             width: 160%;
+            max-width: 320px;
             height: 2px;
-            background: linear-gradient(to right, 
-                rgba(255, 255, 255, 0) 0%, 
-                rgba(255, 255, 255, 1) 30%, 
-                rgba(255, 255, 255, 1) 70%, 
-                rgba(255, 255, 255, 0) 100%
-            );
+            background: linear-gradient(to right,
+                    rgba(255, 255, 255, 0) 0%,
+                    rgba(255, 255, 255, 1) 30%,
+                    rgba(255, 255, 255, 1) 70%,
+                    rgba(255, 255, 255, 0) 100%);
             border-radius: 2px;
         }
 
-        /* ---------- 邮箱 ---------- */
         .email {
-            font-size: clamp(9px, 1.6vw, 16px);
+            font-size: 16px;
             font-weight: 400;
             letter-spacing: 0.02em;
             color: #ffffff;
             text-decoration: none;
             margin-top: 0.8rem;
+            white-space: nowrap;
+            padding: 4px 0;
+            cursor: pointer;
+            transition: opacity 0.2s;
         }
 
-        /* ---------- 小屏适配 ---------- */
+        .email:hover {
+            opacity: 0.7;
+        }
+
+        .email:active {
+            opacity: 0.4;
+        }
+
         @media (max-width: 480px) {
             .name {
-                font-size: 28px;
+                font-size: clamp(24px, 8vw, 36px);
             }
-            .email {
-                font-size: 12px;
-            }
+
             .name-wrapper::after {
                 bottom: -4px;
                 height: 2px;
+                width: 140%;
+                max-width: 200px;
             }
+
         }
 
         @media (max-width: 360px) {
             .name {
-                font-size: 20px;
+                font-size: clamp(18px, 7vw, 26px);
             }
-            .email {
+
+            .name-wrapper::after {
+                width: 120%;
+                max-width: 150px;
+            }
+
+        }
+
+        @supports (padding: max(0px)) {
+            .content {
+                padding-left: max(16px, env(safe-area-inset-left));
+                padding-right: max(16px, env(safe-area-inset-right));
+                padding-top: max(16px, env(safe-area-inset-top));
+                padding-bottom: max(16px, env(safe-area-inset-bottom));
+            }
+        }
+
+        @media (orientation: landscape) and (max-height: 500px) {
+            .name {
+                font-size: clamp(20px, 5vh, 48px);
+            }
+
+            .name-wrapper::after {
+                bottom: -3px;
+                height: 1.5px;
+            }
+
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #ffffff;
+            color: #1e1e1e;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: clamp(12px, 1.2vw, 16px);
+            font-weight: 500;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 9999;
+            white-space: nowrap;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: none;
+        }
+
+        @media (max-width: 480px) {
+            .toast {
+                bottom: 24px;
+                padding: 6px 12px;
+                border-radius: 16px;
+                font-size: clamp(10px, 2.8vw, 14px);
+                white-space: normal;
+                max-width: 70vw;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .toast {
+                bottom: 16px;
+                padding: 5px 10px;
                 font-size: 10px;
+                max-width: 75vw;
             }
         }
     </style>
@@ -108,8 +200,70 @@
         <div class="name-wrapper">
             <span class="name">ZHANG</span>
         </div>
-        <div class="email">hello@zhang.run</div>
+        <span class="email" id="emailCopy">hello@zhang.run</span>
     </div>
+
+    <script>
+        (function() {
+            const emailElement = document.getElementById('emailCopy');
+            const emailText = 'hello@zhang.run';
+
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = '已复制';
+            document.body.appendChild(toast);
+
+            let toastTimer = null;
+
+            function showToast() {
+                if (toastTimer) {
+                    clearTimeout(toastTimer);
+                    toastTimer = null;
+                }
+                toast.classList.add('show');
+                toastTimer = setTimeout(() => {
+                    toast.classList.remove('show');
+                    toastTimer = null;
+                }, 1500);
+            }
+
+            function copyEmail() {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(emailText).then(() => {
+                        showToast();
+                    }).catch(() => {
+                        fallbackCopy();
+                    });
+                } else {
+                    fallbackCopy();
+                }
+            }
+
+            function fallbackCopy() {
+                const textarea = document.createElement('textarea');
+                textarea.value = emailText;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                textarea.style.left = '-9999px';
+                textarea.style.top = '-9999px';
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    const success = document.execCommand('copy');
+                    if (success) {
+                        showToast();
+                    } else {
+                        alert('复制失败，请手动复制');
+                    }
+                } catch (e) {
+                    alert('复制失败，请手动复制');
+                }
+                document.body.removeChild(textarea);
+            }
+
+            emailElement.addEventListener('click', copyEmail);
+        })();
+    </script>
 
 </body>
 </html>
